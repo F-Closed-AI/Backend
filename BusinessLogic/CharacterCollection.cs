@@ -10,11 +10,6 @@ namespace BusinessLogic
 {
 	public class CharacterCollection
 	{
-		public void Test()
-		{
-
-		}
-
 		public async Task<string> CreateCharacterAsync(string input)
 		{
 			string apiUrl = "https://api-d7b62b.stack.tryrelevance.com/latest/studios/cafafd66-ee8c-4764-ba15-65fcd86ec9b7/trigger_limited";

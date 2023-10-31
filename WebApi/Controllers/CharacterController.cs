@@ -1,5 +1,6 @@
 ﻿using BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace WebApi.Controllers
 {
@@ -7,14 +8,36 @@ namespace WebApi.Controllers
 	[ApiController]
 	public class CharacterController : ControllerBase
 	{
-		[HttpGet]
-		public async Task<IActionResult> GetCharacter([FromQuery] string input)
+		private readonly CharacterCollection _characterCollection;
+		private readonly CharacterBL _characterBL;
+
+		public CharacterController(CharacterCollection characterCollection, CharacterBL characterBL)
+		{
+			_characterCollection = characterCollection;
+			_characterBL = characterBL;
+		}
+
+		[HttpGet("Create")]
+		public async Task<IActionResult> CreateCharacter([FromQuery] string input)
 		{
 			try
 			{
-				CharacterCollection charCollection = new CharacterCollection();
+				var result = await _characterCollection.CreateCharacterAsync(input);
 
-				var result = await charCollection.CreateCharacterAsync(input);
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("Store")]
+		public async Task<IActionResult> StoreCharacter([FromQuery] Character character)
+		{
+			try
+			{
+				var result = await _characterBL.StoreCharacter(character);
 
 				return Ok(result);
 			}

@@ -1,4 +1,10 @@
+using BusinessLogic;
+using DataAccessMD;
+using Interfaces;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Models;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +17,19 @@ builder.Services.AddSwaggerGen();
 
 var provider = builder.Services.BuildServiceProvider();
 var configuration = provider.GetRequiredService<IConfiguration>();
+
+
+builder.Services.Configure<DatabaseSettings>(
+	builder.Configuration.GetSection("DatabaseSettings"));
+
+builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+builder.Services.AddSingleton<IMongoClient>(s =>
+new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
+
+builder.Services.AddScoped<CharacterCollection, CharacterCollection>();
+builder.Services.AddScoped<CharacterBL, CharacterBL>();
+builder.Services.AddScoped<CharacterMD, CharacterMD>();
 
 builder.Services.AddCors(options =>
 {
