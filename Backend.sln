@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessMS", "DataAccessM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{A6384A1F-1B62-40D4-984E-2DB10F0C3E9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{250140E1-AB44-425F-9959-13EB32128DCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{250140E1-AB44-425F-9959-13EB32128DCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{8763B48F-1F38-4FCF-B6EA-407B1CA71C99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{250140E1-AB44-425F-9959-13EB32128DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{250140E1-AB44-425F-9959-13EB32128DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{250140E1-AB44-425F-9959-13EB32128DCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8763B48F-1F38-4FCF-B6EA-407B1CA71C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8763B48F-1F38-4FCF-B6EA-407B1CA71C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8763B48F-1F38-4FCF-B6EA-407B1CA71C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8763B48F-1F38-4FCF-B6EA-407B1CA71C99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
