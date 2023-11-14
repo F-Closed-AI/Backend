@@ -1,10 +1,10 @@
-using BusinessLogic;
-using DataAccessMD;
-using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Models;
 using MongoDB.Driver;
+using WebApi.Application.Interfaces;
+using WebApi.Application.Models;
+using WebApi.Application.Repositories;
+using WebApi.Application.Services;
 
 namespace WebApi
 {
@@ -30,9 +30,9 @@ namespace WebApi
 			builder.Services.AddSingleton<IMongoClient>(s =>
 			new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
 
-			builder.Services.AddScoped<CharacterCollection, CharacterCollection>();
-			builder.Services.AddScoped<CharacterBL, CharacterBL>();
-			builder.Services.AddScoped<CharacterMD, CharacterMD>();
+			builder.Services.AddScoped<CharacterCollectionService, CharacterCollectionService>();
+			builder.Services.AddScoped<CharacterService, CharacterService>();
+			builder.Services.AddScoped<CharacterRepository, CharacterRepository>();
 
 			builder.Services.AddCors(options =>
 			{

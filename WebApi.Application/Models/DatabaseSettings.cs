@@ -1,11 +1,11 @@
-﻿using Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApi.Application.Interfaces;
 
-namespace Models
+namespace WebApi.Application.Models
 {
 	public class DatabaseSettings : IDatabaseSettings
 	{

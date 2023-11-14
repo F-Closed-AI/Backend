@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using WebApi.Application.Models;
+using WebApi.Application.Repositories;
 
-namespace BusinessLogic
+namespace WebApi.Application.Services
 {
-	public class CharacterCollection
+	public class CharacterCollectionService
 	{
+		private readonly CharacterRepository _characterRepository;
+		public CharacterCollectionService(CharacterRepository characterRepository)
+		{
+			_characterRepository = characterRepository;
+		}
+
 		public async Task<string> CreateCharacterAsync(string input)
 		{
 			string apiUrl = "https://api-d7b62b.stack.tryrelevance.com/latest/studios/cafafd66-ee8c-4764-ba15-65fcd86ec9b7/trigger_limited";
@@ -69,6 +76,18 @@ namespace BusinessLogic
 			catch (JsonException ex)
 			{
 				return $"JSON parsing error: {ex.Message}";
+			}
+		}
+
+		public async Task<List<Character>> GetCharactersByUserId(int id)
+		{
+			try
+			{
+				return await _characterRepository.GetAllByUserId(id);
+			}
+			catch (JsonException ex)
+			{
+				throw new Exception($"JSON parsing error: {ex.Message}");
 			}
 		}
 	}
