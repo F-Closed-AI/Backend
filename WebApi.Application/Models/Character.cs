@@ -13,6 +13,7 @@ namespace WebApi.Application.Models
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string? Id { get; set; }
+		public int UserId { get; set; }
 		public string? Name { get; set; }
 		public int Age { get; set; }
 		public string? Backstory { get; set; }
