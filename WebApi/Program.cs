@@ -6,59 +6,63 @@ using Microsoft.Extensions.Options;
 using Models;
 using MongoDB.Driver;
 
-public class Program
+namespace WebApi
 {
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+	public class Program
+	{
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+			// Add services to the container.
+			builder.Services.AddControllers();
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen();
 
-        var provider = builder.Services.BuildServiceProvider();
-        var configuration = provider.GetRequiredService<IConfiguration>();
+			var provider = builder.Services.BuildServiceProvider();
+			var configuration = provider.GetRequiredService<IConfiguration>();
 
-        builder.Services.Configure<DatabaseSettings>(
-            builder.Configuration.GetSection("DatabaseSettings"));
+			builder.Services.Configure<DatabaseSettings>(
+				builder.Configuration.GetSection("DatabaseSettings"));
 
-        builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+			builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 
-        builder.Services.AddSingleton<IMongoClient>(s =>
-        new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
+			builder.Services.AddSingleton<IMongoClient>(s =>
+			new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
 
-        builder.Services.AddScoped<CharacterCollection, CharacterCollection>();
-        builder.Services.AddScoped<CharacterBL, CharacterBL>();
-        builder.Services.AddScoped<CharacterMD, CharacterMD>();
+			builder.Services.AddScoped<CharacterCollection, CharacterCollection>();
+			builder.Services.AddScoped<CharacterBL, CharacterBL>();
+			builder.Services.AddScoped<CharacterMD, CharacterMD>();
 
-        builder.Services.AddCors(options =>
-        {
-            var frontendURL = configuration.GetValue<string>("FrontendURL");
+			builder.Services.AddCors(options =>
+			{
+				var frontendURL = configuration.GetValue<string>("FrontendURL");
 
-            options.AddDefaultPolicy(builder =>
-            {
-                builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
-            });
-        });
+				options.AddDefaultPolicy(builder =>
+				{
+					builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+				});
+			});
 
-        var app = builder.Build();
+			var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+			// Configure the HTTP request pipeline.
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			}
 
-        app.UseHttpsRedirection();
+			app.UseHttpsRedirection();
 
-        app.UseCors();
+			app.UseCors();
 
-        app.UseAuthorization();
+			app.UseAuthorization();
 
-        app.MapControllers();
+			app.MapControllers();
 
-        app.Run();
-    }
+			app.Run();
+		}
+	}
+
 }

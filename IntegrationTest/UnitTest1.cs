@@ -5,21 +5,25 @@ using Microsoft.AspNetCore.Hosting;
 using WebApi;
 using WebApi.Controllers;
 using Models;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 
 namespace WebApi.Tests
 {
     [TestFixture]
     public class CharacterControllerIntegrationTests
     {
-        private TestServer _server;
-        private HttpClient _client;
+		private WebApplicationFactory<WebApi.Program> _factory;
+        public HttpClient _client { get; private set; }
 
-        [SetUp]
+		[SetUp]
         public void SetUp()
         {
-            _server = new TestServer(new WebHostBuilder().UseStartup<Program>());
-            _client = _server.CreateClient();
-        }
+			_factory = new WebApplicationFactory<WebApi.Program>();
+
+			_client = _factory.CreateClient();
+		}
 
         [TearDown]
         public void TearDown()
@@ -29,9 +33,9 @@ namespace WebApi.Tests
                 _client.Dispose();
             }
 
-            if (_server != null)
+            if (_factory != null)
             {
-                _server.Dispose();
+				_factory.Dispose();
             }
         }
 
