@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccessMD;
+using Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,12 @@ namespace BusinessLogic
 {
 	public class CharacterCollection
 	{
+		private readonly CharacterMD _characterMD;
+		public CharacterCollection(CharacterMD characterMD)
+		{
+			_characterMD = characterMD;
+		}
+
 		public async Task<string> CreateCharacterAsync(string input)
 		{
 			string apiUrl = "https://api-d7b62b.stack.tryrelevance.com/latest/studios/cafafd66-ee8c-4764-ba15-65fcd86ec9b7/trigger_limited";
@@ -69,6 +77,17 @@ namespace BusinessLogic
 			catch (JsonException ex)
 			{
 				return $"JSON parsing error: {ex.Message}";
+			}
+		}
+
+		public async Task<List<Character>> GetCharactersByUserId(int id)
+		{
+			try
+			{
+				return await _characterMD.GetAllByUserId(id);
+			} catch (JsonException ex)
+			{
+				throw new Exception($"JSON parsing error: {ex.Message}");
 			}
 		}
 	}
