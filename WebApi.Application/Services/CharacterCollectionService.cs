@@ -65,7 +65,13 @@ namespace WebApi.Application.Services
 						outputElement.TryGetProperty("answer", out JsonElement answerElement))
 					{
 						string answer = answerElement.GetString();
-						return GetAnswerFromJson(answer);
+						if (answer != null)
+						{
+							return GetAnswerFromJson(answer);
+						} else
+						{
+							return "Answer is null";
+						}
 					}
 					else
 					{
