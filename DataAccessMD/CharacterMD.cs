@@ -30,5 +30,14 @@ namespace DataAccessMD
 		{
 			return _character.Find(character => true).ToList();
 		}
+
+		public async Task<List<Character>> GetAllByUserId(int id)
+		{
+			var filter = Builders<Character>.Filter.Eq("UserId", id);
+
+			var result = await _character.FindAsync(filter);
+
+			return await result.ToListAsync();
+		}
 	}
 }

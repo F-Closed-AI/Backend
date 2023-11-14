@@ -46,5 +46,20 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpGet("GetCharactersByUserId")]
+		public async Task<IActionResult> GetCharactersByUserId(int userId)
+		{
+			try
+			{
+				var result = await _characterCollection.GetCharactersByUserId(userId);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }
