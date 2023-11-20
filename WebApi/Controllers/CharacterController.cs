@@ -33,7 +33,7 @@ namespace WebApi.Controllers
 		}
 
 		[HttpPost("Store")]
-		public async Task<IActionResult> StoreCharacter([FromQuery] Character character)
+		public async Task<IActionResult> StoreCharacter([FromBody] Character character)
 		{
 			try
 			{
