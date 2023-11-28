@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,23 @@ namespace WebApi.Application.Repositories
 		{
 			var filter = Builders<Character>.Filter.Eq("UserId", id);
 
-			var result = await _character.FindAsync(filter);
+			var groupStage = new BsonDocument("$group", new BsonDocument
+			{
+				{ "_id", "$CharId" },
+				{ "latestCharacter", new BsonDocument("$first", "$$ROOT") }
+			});
 
-			return await result.ToListAsync();
+			var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument("newRoot", "$latestCharacter"));
+
+			var pipeline = new[] {
+				PipelineStageDefinitionBuilder.Match(filter),
+				PipelineStageDefinitionBuilder.Sort(Builders<Character>.Sort.Descending("_id")),
+				groupStage,
+				replaceRootStage
+			};
+
+			var cursor = await _character.AggregateAsync<Character>(PipelineDefinition<Character, Character>.Create(pipeline));
+			return await cursor.ToListAsync();
 		}
 	}
 }

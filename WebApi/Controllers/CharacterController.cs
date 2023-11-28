@@ -47,6 +47,27 @@ namespace WebApi.Controllers
 			}
 		}
 
+		[HttpPost("Update")]
+		public async Task<IActionResult> UpdateCharacter([FromQuery] Character character)
+		{
+			try
+			{
+				if (character.CharId == null)
+				{
+					return BadRequest("CharId is missing!");
+				} else
+				{
+					var result = await _characterService.StoreCharacter(character);
+
+					return Ok(result);
+				}
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpGet("GetCharactersByUserId")]
 		public async Task<IActionResult> GetCharactersByUserId(int userId)
 		{

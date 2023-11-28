@@ -13,7 +13,9 @@ namespace WebApi.Application.Models
 	{
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
-		public string? Id { get; set; }
+		public string? Id { get; set; } 
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string? CharId { get; set; } = ObjectId.GenerateNewId().ToString();
 		[Required]
 		public int UserId { get; set; }
 		[Required]
