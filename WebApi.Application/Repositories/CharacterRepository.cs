@@ -26,6 +26,21 @@ namespace WebApi.Application.Repositories
 			return character;
 		}
 
+		public async Task<Character> EditCharacter(Character character)
+		{
+			var filter = Builders<Character>.Filter.Eq("Id", character.Id);
+
+			var update = Builders<Character>.Update
+				.Set(chart => chart.Name, character.Name)
+				.Set(chart => chart.Age, character.Age)
+				.Set(chart => chart.Backstory, character.Backstory);
+				
+
+			await _character.UpdateOneAsync(filter, update);
+
+			return character;
+		}
+
 		public List<Character> GetAll()
 		{
 			return _character.Find(character => true).ToList();

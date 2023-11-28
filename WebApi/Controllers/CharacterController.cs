@@ -4,7 +4,7 @@ using WebApi.Application.Services;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+	[Route("api/[controller]")]
 	[ApiController]
 	public class CharacterController : ControllerBase
 	{
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
 		}
 
 		[HttpPost("Store")]
-		public async Task<IActionResult> StoreCharacter([FromQuery] Character character)
+		public async Task<IActionResult> StoreCharacter([FromBody] Character character)
 		{
 			try
 			{
@@ -74,6 +74,21 @@ namespace WebApi.Controllers
 			try
 			{
 				var result = await _characterCollectionService.GetCharactersByUserId(userId);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPut("Edit")]
+		public async Task<IActionResult> EditChracter([FromBody] Character character)
+		{
+			try
+			{
+				var result = await _characterService.EditCharater(character);
 
 				return Ok(result);
 			}

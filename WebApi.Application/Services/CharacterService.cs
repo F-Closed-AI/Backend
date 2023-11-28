@@ -20,5 +20,10 @@ namespace WebApi.Application.Services
 		{
 			return await _characterRepository.StoreCharacter(character);
 		}
+
+		public async Task<Character> EditCharater(Character character)
+		{
+			return await _characterRepository.EditCharacter(character);
+		}
 	}
 }

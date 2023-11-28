@@ -40,7 +40,7 @@ namespace WebApi
 
 				options.AddDefaultPolicy(builder =>
 				{
-					builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+					builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
 				});
 			});
 
