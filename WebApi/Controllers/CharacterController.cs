@@ -82,20 +82,5 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-
-		[HttpPut("Edit")]
-		public async Task<IActionResult> EditChracter([FromBody] Character character)
-		{
-			try
-			{
-				var result = await _characterService.EditCharater(character);
-
-				return Ok(result);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
 	}
 }
