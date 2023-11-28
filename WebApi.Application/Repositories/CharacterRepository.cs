@@ -53,5 +53,16 @@ namespace WebApi.Application.Repositories
 			var cursor = await _character.AggregateAsync<Character>(PipelineDefinition<Character, Character>.Create(pipeline));
 			return await cursor.ToListAsync();
 		}
+
+		public async Task<List<Character>> GetCharacter(string charId)
+		{
+			var filter = Builders<Character>.Filter.Eq("CharId", charId);
+
+			var sort = Builders<Character>.Sort.Descending("_id");
+
+			var result = await _character.Find(filter).Sort(sort).ToListAsync();
+
+			return result;
+		}
 	}
 }

@@ -82,5 +82,20 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpGet("GetCharacter")]
+		public async Task<IActionResult> GetCharacter(string charId)
+		{
+			try
+			{
+				var result = await _characterService.GetCharacter(charId);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }

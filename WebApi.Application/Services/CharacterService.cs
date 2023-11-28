@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,11 @@ namespace WebApi.Application.Services
 		public async Task<Character> StoreCharacter(Character character)
 		{
 			return await _characterRepository.StoreCharacter(character);
+		}
+
+		public async Task<List<Character>> GetCharacter(string charId)
+		{
+			return await _characterRepository.GetCharacter(charId);
 		}
 	}
 }
