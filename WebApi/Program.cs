@@ -1,61 +1,68 @@
-using BusinessLogic;
-using DataAccessMD;
-using Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Models;
 using MongoDB.Driver;
+using WebApi.Application.Interfaces;
+using WebApi.Application.Models;
+using WebApi.Application.Repositories;
+using WebApi.Application.Services;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var provider = builder.Services.BuildServiceProvider();
-var configuration = provider.GetRequiredService<IConfiguration>();
-
-
-builder.Services.Configure<DatabaseSettings>(
-	builder.Configuration.GetSection("DatabaseSettings"));
-
-builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-
-builder.Services.AddSingleton<IMongoClient>(s =>
-new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
-
-builder.Services.AddScoped<CharacterCollection, CharacterCollection>();
-builder.Services.AddScoped<CharacterBL, CharacterBL>();
-builder.Services.AddScoped<CharacterMD, CharacterMD>();
-
-builder.Services.AddCors(options =>
+namespace WebApi
 {
-	var frontendURL = configuration.GetValue<string>("FrontendURL");
-
-	options.AddDefaultPolicy(builder =>
+	public class Program
 	{
-		builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
-	});
-});
+		public static void Main(string[] args)
+		{
+			var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+			// Add services to the container.
+			builder.Services.AddControllers();
+			builder.Services.AddEndpointsApiExplorer();
+			builder.Services.AddSwaggerGen();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
+			var provider = builder.Services.BuildServiceProvider();
+			var configuration = provider.GetRequiredService<IConfiguration>();
+
+			builder.Services.Configure<DatabaseSettings>(
+				builder.Configuration.GetSection("DatabaseSettings"));
+
+			builder.Services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+			builder.Services.AddSingleton<IMongoClient>(s =>
+			new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
+
+			builder.Services.AddScoped<CharacterCollectionService, CharacterCollectionService>();
+			builder.Services.AddScoped<CharacterService, CharacterService>();
+			builder.Services.AddScoped<CharacterRepository, CharacterRepository>();
+
+			builder.Services.AddCors(options =>
+			{
+				var frontendURL = configuration.GetValue<string>("FrontendURL");
+
+				options.AddDefaultPolicy(builder =>
+				{
+					builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+				});
+			});
+
+			var app = builder.Build();
+
+			// Configure the HTTP request pipeline.
+			if (app.Environment.IsDevelopment())
+			{
+				app.UseSwagger();
+				app.UseSwaggerUI();
+			}
+
+			app.UseHttpsRedirection();
+
+			app.UseCors();
+
+			app.UseAuthorization();
+
+			app.MapControllers();
+
+			app.Run();
+		}
+	}
+
 }
-
-app.UseHttpsRedirection();
-
-app.UseCors();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

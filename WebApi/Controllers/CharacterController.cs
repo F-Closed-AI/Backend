@@ -1,6 +1,6 @@
-﻿using BusinessLogic;
-using Microsoft.AspNetCore.Mvc;
-using Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Application.Models;
+using WebApi.Application.Services;
 
 namespace WebApi.Controllers
 {
@@ -8,13 +8,13 @@ namespace WebApi.Controllers
 	[ApiController]
 	public class CharacterController : ControllerBase
 	{
-		private readonly CharacterCollection _characterCollection;
-		private readonly CharacterBL _characterBL;
+		private readonly CharacterCollectionService _characterCollectionService;
+		private readonly CharacterService _characterService;
 
-		public CharacterController(CharacterCollection characterCollection, CharacterBL characterBL)
+		public CharacterController(CharacterCollectionService characterCollectionService, CharacterService characterService)
 		{
-			_characterCollection = characterCollection;
-			_characterBL = characterBL;
+			_characterCollectionService = characterCollectionService;
+			_characterService = characterService;
 		}
 
 		[HttpGet("Create")]
@@ -22,7 +22,7 @@ namespace WebApi.Controllers
 		{
 			try
 			{
-				var result = await _characterCollection.CreateCharacterAsync(input);
+				var result = await _characterCollectionService.CreateCharacterAsync(input);
 
 				return Ok(result);
 			}
@@ -33,13 +33,34 @@ namespace WebApi.Controllers
 		}
 
 		[HttpPost("Store")]
-		public async Task<IActionResult> StoreCharacter([FromQuery] Character character)
+		public async Task<IActionResult> StoreCharacter([FromBody] Character character)
 		{
 			try
 			{
-				var result = await _characterBL.StoreCharacter(character);
+				var result = await _characterService.StoreCharacter(character);
 
 				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("Update")]
+		public async Task<IActionResult> UpdateCharacter([FromQuery] Character character)
+		{
+			try
+			{
+				if (character.CharId == null)
+				{
+					return BadRequest("CharId is missing!");
+				} else
+				{
+					var result = await _characterService.StoreCharacter(character);
+
+					return Ok(result);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -52,7 +73,22 @@ namespace WebApi.Controllers
 		{
 			try
 			{
-				var result = await _characterCollection.GetCharactersByUserId(userId);
+				var result = await _characterCollectionService.GetCharactersByUserId(userId);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("GetCharacter")]
+		public async Task<IActionResult> GetCharacter(string charId)
+		{
+			try
+			{
+				var result = await _characterService.GetCharacter(charId);
 
 				return Ok(result);
 			}

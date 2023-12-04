@@ -1,21 +1,20 @@
-﻿using DataAccessMD;
-using Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using WebApi.Application.Models;
+using WebApi.Application.Repositories;
 
-namespace BusinessLogic
+namespace WebApi.Application.Services
 {
-	public class CharacterCollection
+	public class CharacterCollectionService
 	{
-		private readonly CharacterMD _characterMD;
-		public CharacterCollection(CharacterMD characterMD)
+		private readonly CharacterRepository _characterRepository;
+		public CharacterCollectionService(CharacterRepository characterRepository)
 		{
-			_characterMD = characterMD;
+			_characterRepository = characterRepository;
 		}
 
 		public async Task<string> CreateCharacterAsync(string input)
@@ -66,7 +65,13 @@ namespace BusinessLogic
 						outputElement.TryGetProperty("answer", out JsonElement answerElement))
 					{
 						string answer = answerElement.GetString();
-						return GetAnswerFromJson(answer);
+						if (answer != null)
+						{
+							return GetAnswerFromJson(answer);
+						} else
+						{
+							return "Answer is null";
+						}
 					}
 					else
 					{
@@ -84,8 +89,9 @@ namespace BusinessLogic
 		{
 			try
 			{
-				return await _characterMD.GetAllByUserId(id);
-			} catch (JsonException ex)
+				return await _characterRepository.GetAllByUserId(id);
+			}
+			catch (JsonException ex)
 			{
 				throw new Exception($"JSON parsing error: {ex.Message}");
 			}
