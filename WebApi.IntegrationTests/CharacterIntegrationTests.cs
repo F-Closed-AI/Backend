@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using WebApi.Application.Models;
 
 namespace WebApi.IntegrationTests
@@ -17,8 +18,17 @@ namespace WebApi.IntegrationTests
 		[SetUp]
 		public void SetUp()
 		{
-			_factory = new WebApplicationFactory<WebApi.Program>();
+			var projectDir = Directory.GetCurrentDirectory();
+			var configPath = Path.Combine(projectDir, "appsettings.Test.json");
 
+			_factory = new WebApplicationFactory<WebApi.Program>()
+				.WithWebHostBuilder(builder =>
+				{
+					builder.ConfigureAppConfiguration((context, config) =>
+					{
+						config.AddJsonFile(configPath);
+					});
+				});
 			_client = _factory.CreateClient();
 		}
 
