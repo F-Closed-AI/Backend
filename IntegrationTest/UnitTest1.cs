@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
 using WebApi;
 using WebApi.Controllers;
-using Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using WebApi.Application.Models;
 
 namespace WebApi.Tests
 {
