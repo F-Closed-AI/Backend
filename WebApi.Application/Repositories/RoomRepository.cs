@@ -16,7 +16,7 @@ namespace WebApi.Application.Repositories
         public RoomRepository(IDatabaseSettings settings, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
-            _room = database.GetCollection<Room>(settings.CollectionName);
+            _room = database.GetCollection<Room>(settings.RoomCollectionName);
         }
 
         public async Task<Room> CreateRoom(Room room)

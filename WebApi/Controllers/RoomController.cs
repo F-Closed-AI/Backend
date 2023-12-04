@@ -17,7 +17,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateCharacter([FromBody] Room room)
+        public async Task<IActionResult> CreateRoom([FromBody] Room room)
         {
             try
             {
