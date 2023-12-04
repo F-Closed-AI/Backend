@@ -75,7 +75,13 @@ namespace WebApi.Controllers
 			{
 				var result = await _characterCollectionService.GetCharactersByUserId(userId);
 
-				return Ok(result);
+				if (result.Any())
+				{
+					return Ok(result);
+				} else
+				{
+					return NotFound();
+				}
 			}
 			catch (Exception ex)
 			{

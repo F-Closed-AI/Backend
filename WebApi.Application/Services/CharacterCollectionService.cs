@@ -64,7 +64,7 @@ namespace WebApi.Application.Services
 					if (root.TryGetProperty("output", out JsonElement outputElement) &&
 						outputElement.TryGetProperty("answer", out JsonElement answerElement))
 					{
-						string answer = answerElement.GetString();
+						string? answer = answerElement.GetString();
 						if (answer != null)
 						{
 							return GetAnswerFromJson(answer);

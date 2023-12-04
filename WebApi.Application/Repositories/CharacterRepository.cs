@@ -58,7 +58,7 @@ namespace WebApi.Application.Repositories
 		{
 			var filter = Builders<Character>.Filter.Eq("CharId", charId);
 
-			var sort = Builders<Character>.Sort.Descending("_id");
+			var sort = Builders<Character>.Sort.Descending("DateTime");
 
 			var result = await _character.Find(filter).Sort(sort).ToListAsync();
 
