@@ -47,7 +47,7 @@ namespace WebApi.Controllers
 			}
 		}
 
-		[HttpPost("Update")]
+		[HttpPut("Update")]
 		public async Task<IActionResult> UpdateCharacter([FromBody] Character character)
 		{
 			try
