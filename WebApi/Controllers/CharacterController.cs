@@ -48,7 +48,7 @@ namespace WebApi.Controllers
 		}
 
 		[HttpPost("Update")]
-		public async Task<IActionResult> UpdateCharacter([FromQuery] Character character)
+		public async Task<IActionResult> UpdateCharacter([FromBody] Character character)
 		{
 			try
 			{
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
 			}
 		}
 
-		[HttpGet("GetCharactersByUserId")]
+		[HttpGet("User/{userId}")]
 		public async Task<IActionResult> GetCharactersByUserId(int userId)
 		{
 			try
@@ -89,12 +89,27 @@ namespace WebApi.Controllers
 			}
 		}
 
-		[HttpGet("GetCharacter")]
-		public async Task<IActionResult> GetCharacter(string charId)
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetCharacter(string id)
 		{
 			try
 			{
-				var result = await _characterService.GetCharacter(charId);
+				var result = await _characterService.GetCharacter(id);
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpGet("Characters/{charId}")]
+		public async Task<IActionResult> GetCharacters(string charId)
+		{
+			try
+			{
+				var result = await _characterService.GetCharacters(charId);
 
 				return Ok(result);
 			}
