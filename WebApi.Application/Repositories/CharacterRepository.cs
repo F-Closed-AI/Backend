@@ -33,36 +33,32 @@ namespace WebApi.Application.Repositories
 
 		public async Task<List<Character>> GetAllByUserId(int id)
 		{
-			var filter = Builders<Character>.Filter.Eq("UserId", id);
+            var filter = Builders<Character>.Filter.Eq("UserId", id);
+            var sortDefinition = Builders<Character>.Sort.Descending("_id");
 
-			var groupStage = new BsonDocument("$group", new BsonDocument
-			{
-				{ "_id", "$CharId" },
-				{ "latestCharacter", new BsonDocument("$first", "$$ROOT") }
-			});
+            var latestCharacters = (await _character.Find(filter)
+                .Sort(sortDefinition)
+                .ToListAsync())
+                .GroupBy(character => character.CharId)
+                .Select(group => group.First())
+                .ToDictionary(character => character.CharId!);
 
-			var replaceRootStage = new BsonDocument("$replaceRoot", new BsonDocument("newRoot", "$latestCharacter"));
+            return latestCharacters.Values.ToList();
+        }
 
-			var pipeline = new[] {
-				PipelineStageDefinitionBuilder.Match(filter),
-				PipelineStageDefinitionBuilder.Sort(Builders<Character>.Sort.Descending("_id")),
-				groupStage,
-				replaceRootStage
-			};
-
-			var cursor = await _character.AggregateAsync<Character>(PipelineDefinition<Character, Character>.Create(pipeline));
-			return await cursor.ToListAsync();
-		}
-
-		public async Task<List<Character>> GetCharacter(string charId)
+		public async Task<Character> GetCharacter(string id)
 		{
-			var filter = Builders<Character>.Filter.Eq("CharId", charId);
+            var filter = Builders<Character>.Filter.Eq("_id", ObjectId.Parse(id));
+            return await _character.Find(filter).FirstOrDefaultAsync();
+        }
 
-			var sort = Builders<Character>.Sort.Descending("DateTime");
-
-			var result = await _character.Find(filter).Sort(sort).ToListAsync();
-
-			return result;
-		}
-	}
+        public async Task<IEnumerable<Character>> GetCharacters(string charId)
+        {
+            var filter = Builders<Character>.Filter.Eq("CharId", charId);
+            var sort = Builders<Character>.Sort.Descending("DateTime");
+            return await _character.Find(filter)
+                .Sort(sort)
+                .ToListAsync();
+        }
+    }
 }
