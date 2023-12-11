@@ -22,5 +22,10 @@ namespace WebApi.Application.Services
         {
             return await _roomRepository.CreateRoom(room);
         }
-    }
+
+		public async Task<bool> DeleteRoom(string id)
+		{
+			return await _roomRepository.DeleteRoom(id);
+		}
+	}
 }

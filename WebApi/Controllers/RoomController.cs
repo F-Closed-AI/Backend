@@ -30,5 +30,26 @@ namespace WebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteRoom(string id)
+        {
+            try
+            {
+                var result = await _roomCollectionService.DeleteRoom(id);
+
+                if (result)
+                {
+                    return Ok(result);
+                } else
+                {
+                    return BadRequest();
+                }
+            }
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
     }
 }

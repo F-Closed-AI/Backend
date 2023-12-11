@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,16 @@ namespace WebApi.Application.Repositories
             await _room.InsertOneAsync(room);
             return room;
         }
-    }
+
+		public async Task<bool> DeleteRoom(string id)
+		{
+			var filter = Builders<Room>.Filter.Eq("Id", id);
+
+            var update = Builders<Room>.Update.Set("IsDeleted", true);
+
+			await _room.UpdateOneAsync(filter, update);
+
+			return true;
+		}
+	}
 }

@@ -14,11 +14,10 @@ namespace WebApi.Application.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? RoomId { get; set; } = ObjectId.GenerateNewId().ToString();
         [Required]
         public int UserId { get; set; }
 
         public List<string>? CharId { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }
