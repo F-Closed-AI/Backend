@@ -23,7 +23,7 @@ namespace WebApi.Application.Models
 		[Required]
 		public int Age { get; set; }
 		[Required]
-		public string? Backstory { get; set; }
+		public string? BackStory { get; set; }
 		public DateTime DateTime { get; set; } = DateTime.UtcNow;
 	}
 }
