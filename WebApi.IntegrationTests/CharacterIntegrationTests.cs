@@ -76,7 +76,7 @@ namespace WebApi.IntegrationTests
 		public async Task StoreCharacter_ValidCharacter_ReturnsOk()
 		{
 			// Arrange
-			var character = new Character { UserId = 5, Name = "Test", Age = 5, Backstory = "Achtergrond verhaaltje" };
+			var character = new Character { UserId = 5, Name = "Test", Age = 5, BackStory = "Achtergrond verhaaltje" };
 			var json = JsonConvert.SerializeObject(character);
 			var content = new StringContent(json, Encoding.UTF8, "application/json");
 
