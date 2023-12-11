@@ -11,11 +11,13 @@ namespace WebApi.Controllers
     {
         private readonly RoomCollectionService _roomCollectionService;
         private readonly RoomService _roomService;
+        private readonly CharacterService _characterService;
 
-        public RoomController(RoomCollectionService roomCollectionService, RoomService roomService)
+        public RoomController(RoomCollectionService roomCollectionService, RoomService roomService, CharacterService characterService)
         {
             _roomCollectionService = roomCollectionService;
             _roomService = roomService;
+            _characterService = characterService;
         }
 
 		[HttpGet("{id}")]
@@ -74,5 +76,32 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-    }
+
+		[HttpPost("AddCharacter")]
+		public async Task<IActionResult> AddCharacter(string roomId, string charId)
+		{
+			try
+			{
+				var character = await _characterService.GetCharacter(charId);
+
+                if (character == null)
+                {
+                    return NotFound("Character not found");
+                }
+
+				var result = await _roomService.AddCharacter(roomId, charId);
+
+                if (result == null)
+                {
+                    return NotFound("Room not found");
+                }
+
+                return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+	}
 }

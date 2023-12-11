@@ -46,5 +46,22 @@ namespace WebApi.Application.Repositories
 
 			return true;
 		}
+
+		public async Task<Room> AddCharacter(string roomId, string charId)
+		{
+			var filter = Builders<Room>.Filter.And(
+				Builders<Room>.Filter.Eq("_id", roomId),
+				Builders<Room>.Filter.Eq("IsDeleted", false)
+			);
+
+			var update = Builders<Room>.Update.Push("CharId", charId);
+
+			var options = new FindOneAndUpdateOptions<Room>
+			{
+				ReturnDocument = ReturnDocument.After
+			};
+
+			return await _room.FindOneAndUpdateAsync(filter, update, options);
+		}
 	}
 }
