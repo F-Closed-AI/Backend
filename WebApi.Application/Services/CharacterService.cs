@@ -22,9 +22,14 @@ namespace WebApi.Application.Services
 			return await _characterRepository.StoreCharacter(character);
 		}
 
-		public async Task<List<Character>> GetCharacter(string charId)
+		public async Task<Character> GetCharacter(string id)
 		{
-			return await _characterRepository.GetCharacter(charId);
+			return await _characterRepository.GetCharacter(id);
+		}
+
+		public async Task<IEnumerable<Character>> GetCharacters(string charId)
+		{
+			return await _characterRepository.GetCharacters(charId);
 		}
 	}
 }
