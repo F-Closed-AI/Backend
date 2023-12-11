@@ -25,5 +25,10 @@ namespace WebApi.Application.Services
 		{
 			return await _roomRepository.AddCharacter(roomId, charId);
 		}
+
+		public async Task<Room> RemoveCharacter(string roomId, string charId)
+		{
+			return await _roomRepository.RemoveCharacter(roomId, charId);
+		}
 	}
 }
