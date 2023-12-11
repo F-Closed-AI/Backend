@@ -20,7 +20,17 @@ namespace WebApi.Application.Repositories
             _room = database.GetCollection<Room>(settings.RoomCollectionName);
         }
 
-        public async Task<Room> CreateRoom(Room room)
+		public async Task<Room> GetRoom(string id)
+		{
+			var filter = Builders<Room>.Filter.And(
+				Builders<Room>.Filter.Eq("_id", ObjectId.Parse(id)),
+				Builders<Room>.Filter.Eq("IsDeleted", false)
+			);
+
+			return await _room.Find(filter).FirstOrDefaultAsync();
+		}
+
+		public async Task<Room> CreateRoom(Room room)
         {
             await _room.InsertOneAsync(room);
             return room;

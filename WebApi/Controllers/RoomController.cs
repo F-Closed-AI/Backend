@@ -10,13 +10,36 @@ namespace WebApi.Controllers
     public class RoomController : ControllerBase
     {
         private readonly RoomCollectionService _roomCollectionService;
+        private readonly RoomService _roomService;
 
-        public RoomController(RoomCollectionService roomCollectionService)
+        public RoomController(RoomCollectionService roomCollectionService, RoomService roomService)
         {
             _roomCollectionService = roomCollectionService;
+            _roomService = roomService;
         }
 
-        [HttpPost("Create")]
+		[HttpGet("{id}")]
+		public async Task<IActionResult> GetRoom(string id)
+		{
+			try
+			{
+				var result = await _roomService.GetRoom(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                } else
+                {
+				    return Ok(result);
+                }
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPost("Create")]
         public async Task<IActionResult> CreateRoom([FromBody] Room room)
         {
             try
