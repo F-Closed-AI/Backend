@@ -18,7 +18,7 @@ namespace WebApi.Controllers
 		}
 
 		[HttpPost("Create")]
-		public async Task<IActionResult> CreateCharacter([FromQuery] string input)
+		public async Task<IActionResult> CreateCharacter([FromBody] string input)
 		{
 			try
 			{
