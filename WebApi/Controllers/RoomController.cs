@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Application.Services;
 using WebApi.Application.Models;
 
@@ -41,6 +40,28 @@ namespace WebApi.Controllers
 			}
 		}
 
+        [HttpGet("Rooms/{roomId}")]
+        public async Task<IActionResult> GetRooms(string roomId)
+        {
+            try
+            {
+                var result = await _roomService.GetRooms(roomId);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("User/{userId}")]
+        public async Task<IActionResult> GetRoomsByUserId(int userId)
+        {
+            var result = await _roomService.GetRoomsByUserId(userId);
+            return Ok(result);
+        }
+
 		[HttpPost("Create")]
         public async Task<IActionResult> CreateRoom([FromBody] Room room)
         {
@@ -49,6 +70,28 @@ namespace WebApi.Controllers
                 var result = await _roomCollectionService.CreateRoom(room);
 
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateRoom([FromBody] Room room)
+        {
+            try
+            {
+                if (room.RoomId == null)
+                {
+                    return BadRequest("RoomId is missing!");
+                }
+                else
+                {
+                    var result = await _roomCollectionService.CreateRoom(room);
+
+                    return Ok(result);
+                }
             }
             catch (Exception ex)
             {
@@ -76,6 +119,13 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+        [HttpGet("Characters/{roomId}")]
+        public async Task<IActionResult> GetCharacters(string roomId)
+        {
+            var result = await _roomService.GetCharacters(roomId);
+            return Ok(result);
+        }
 
 		[HttpPost("AddCharacter")]
 		public async Task<IActionResult> AddCharacter(string roomId, string charId)
