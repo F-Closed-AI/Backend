@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebApi.Application.Models;
+﻿using WebApi.Application.Models;
 using WebApi.Application.Repositories;
 
 namespace WebApi.Application.Services
@@ -19,6 +14,21 @@ namespace WebApi.Application.Services
 		public async Task<Room> GetRoom(string id)
 		{
 			return await _roomRepository.GetRoom(id);
+		}
+
+        public async Task<IEnumerable<Room>> GetRooms(string roomId)
+        {
+            return await _roomRepository.GetRooms(roomId);
+        }
+
+        public async Task<IEnumerable<Room>> GetRoomsByUserId(int userId)
+		{
+			return await _roomRepository.GetRoomsByUserId(userId);
+		}
+
+		public async Task<IEnumerable<Character>> GetCharacters(string roomId)
+		{
+			return await _roomRepository.GetCharacters(roomId);
 		}
 
 		public async Task<Room> AddCharacter(string roomId, string charId)
