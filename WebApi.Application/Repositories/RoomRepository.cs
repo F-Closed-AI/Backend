@@ -84,7 +84,7 @@ namespace WebApi.Application.Repositories
 		public async Task<Room> AddCharacter(string roomId, string charId)
 		{
 			var filter = Builders<Room>.Filter.And(
-				Builders<Room>.Filter.Eq("_id", roomId),
+				Builders<Room>.Filter.Eq("Id", roomId),
 				Builders<Room>.Filter.Eq("IsDeleted", false)
 			);
 
@@ -96,6 +96,33 @@ namespace WebApi.Application.Repositories
 			};
 
 			return await _room.FindOneAndUpdateAsync(filter, update, options);
+		}
+
+		public async Task<Room> RemoveCharacter(string roomId, string charId)
+		{
+			var filter = Builders<Room>.Filter.And(
+				Builders<Room>.Filter.Eq("Id", roomId),
+				Builders<Room>.Filter.Eq("IsDeleted", false),
+				Builders<Room>.Filter.AnyEq("CharId", charId)
+			);
+
+			var roomToUpdate = await _room.Find(filter).FirstOrDefaultAsync();
+
+			if (roomToUpdate != null)
+			{
+				var update = Builders<Room>.Update.Pull("CharId", charId);
+
+				var options = new FindOneAndUpdateOptions<Room>
+				{
+					ReturnDocument = ReturnDocument.After
+				};
+
+				return await _room.FindOneAndUpdateAsync(filter, update, options);
+			}
+			else
+			{
+				throw new Exception($"CharId {charId} does not exist on room {roomId}.");
+			}
 		}
 	}
 }

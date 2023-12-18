@@ -153,5 +153,25 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+		[HttpDelete("RemoveCharacter")]
+		public async Task<IActionResult> RemoveCharacter(string roomId, string charId)
+		{
+			try
+			{
+				var result = await _roomService.RemoveCharacter(roomId, charId);
+
+				if (result == null)
+				{
+					return NotFound("Room not found");
+				}
+
+				return Ok(result);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 	}
 }
