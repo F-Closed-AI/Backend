@@ -17,8 +17,8 @@ namespace WebApi.Controllers
 			_characterService = characterService;
 		}
 
-		[HttpGet("Create")]
-		public async Task<IActionResult> CreateCharacter([FromQuery] string input)
+		[HttpPost("Create")]
+		public async Task<IActionResult> CreateCharacter([FromBody] string input)
 		{
 			try
 			{
@@ -47,7 +47,7 @@ namespace WebApi.Controllers
 			}
 		}
 
-		[HttpPost("Update")]
+		[HttpPut("Update")]
 		public async Task<IActionResult> UpdateCharacter([FromBody] Character character)
 		{
 			try
