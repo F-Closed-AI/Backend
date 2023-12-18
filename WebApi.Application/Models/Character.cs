@@ -1,11 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebApi.Application.Models
 {
@@ -18,6 +13,8 @@ namespace WebApi.Application.Models
 		public string? CharId { get; set; } = ObjectId.GenerateNewId().ToString();
 		[Required]
 		public int UserId { get; set; }
+		[Required]
+		public string? Prompt { get; set; }
 		[Required]
 		public string? Name { get; set; }
 		[Required]
