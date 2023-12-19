@@ -18,5 +18,6 @@ namespace WebApi.Application.Models
         public List<string>? CharId { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
+        public Conversation Conversation {  get; set; } 
     }
 }

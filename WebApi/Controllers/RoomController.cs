@@ -173,5 +173,32 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+        [HttpPost("CreateConversation")]
+        public async Task<IActionResult> CreateConversation(string roomId, string subject)
+        {
+            try
+            {
+                if (roomId == null)
+                {
+                    return BadRequest("RoomId is missing!");
+                }
+                else
+                {
+                    var room = await _roomService.GetRoom(roomId);
+                    var char1 = await _characterService.GetCharacter(room.CharId[0]);
+                    var char2 = await _characterService.GetCharacter(room.CharId[1]);
+
+                    var result = await _roomService.CreateConversation(char1, char2, subject);
+
+                    return Ok(result);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 	}
 }
