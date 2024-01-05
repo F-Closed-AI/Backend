@@ -118,5 +118,27 @@ namespace WebApi.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
-	}
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteCharacter([FromBody] string id)
+        {
+            try
+            {
+                var result = await _characterCollectionService.DeleteCharacter(id);
+
+                if (result)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    }
 }
