@@ -39,6 +39,9 @@ namespace WebApi
             builder.Services.AddScoped<RoomService, RoomService>();
             builder.Services.AddScoped<RoomRepository, RoomRepository>();
 
+			builder.Services.AddScoped<LabelService, LabelService>();
+			builder.Services.AddScoped<LabelRepository, LabelRepository>();	
+
             builder.Services.AddCors(options =>
 			{
 				var frontendURL = configuration.GetValue<string>("FrontendURL");
