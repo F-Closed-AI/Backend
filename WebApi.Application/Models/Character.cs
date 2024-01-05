@@ -21,6 +21,8 @@ namespace WebApi.Application.Models
 		public int Age { get; set; }
 		[Required]
 		public string? BackStory { get; set; }
-		public DateTime DateTime { get; set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; set; } = false;
+        public DateTime DateTime { get; set; } = DateTime.UtcNow;
+
 	}
 }
