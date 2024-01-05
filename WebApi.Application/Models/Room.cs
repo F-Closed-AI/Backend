@@ -12,12 +12,13 @@ namespace WebApi.Application.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? RoomId { get; set; } = ObjectId.GenerateNewId().ToString();
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         public int UserId { get; set; }
         public List<string>? CharId { get; set; }
+        public List<string>? LabelId { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime DateTime { get; set; } = DateTime.UtcNow;
-        public Conversation Conversation {  get; set; } 
+        public Conversation? Conversation {  get; set; } 
     }
 }
