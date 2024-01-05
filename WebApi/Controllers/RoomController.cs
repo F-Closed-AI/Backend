@@ -19,26 +19,27 @@ namespace WebApi.Controllers
             _characterService = characterService;
         }
 
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetRoom(string id)
-		{
-			try
-			{
-				var result = await _roomService.GetRoom(id);
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRoom(string id)
+        {
+            try
+            {
+                var result = await _roomService.GetRoom(id);
 
                 if (result == null)
                 {
                     return NotFound();
-                } else
-                {
-				    return Ok(result);
                 }
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
+                else
+                {
+                    return Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("Rooms/{roomId}")]
         public async Task<IActionResult> GetRooms(string roomId)
@@ -62,7 +63,7 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-		[HttpPost("Create")]
+        [HttpPost("Create")]
         public async Task<IActionResult> CreateRoom([FromBody] Room room)
         {
             try
@@ -100,7 +101,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("Delete")]
-        public async Task<IActionResult> DeleteRoom(string id)
+        public async Task<IActionResult> DeleteRoom([FromBody] string id)
         {
             try
             {
@@ -109,16 +110,17 @@ namespace WebApi.Controllers
                 if (result)
                 {
                     return Ok(result);
-                } else
+                }
+                else
                 {
                     return BadRequest();
                 }
             }
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("Characters/{roomId}")]
         public async Task<IActionResult> GetCharacters(string roomId)
@@ -127,55 +129,15 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-		[HttpPost("AddCharacter")]
-		public async Task<IActionResult> AddCharacter(string roomId, string charId)
-		{
-			try
-			{
-				var character = await _characterService.GetCharacter(charId);
+        [HttpGet("Labels/{roomId}")]
+        public async Task<IActionResult> GetLabels(string roomId)
+        {
+            var result = await _roomService.GetLabels(roomId);
+            return Ok(result);
+        }
 
-                if (character == null)
-                {
-                    return NotFound("Character not found");
-                }
-
-				var result = await _roomService.AddCharacter(roomId, charId);
-
-                if (result == null)
-                {
-                    return NotFound("Room not found");
-                }
-
-                return Ok(result);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
-
-		[HttpDelete("RemoveCharacter")]
-		public async Task<IActionResult> RemoveCharacter(string roomId, string charId)
-		{
-			try
-			{
-				var result = await _roomService.RemoveCharacter(roomId, charId);
-
-				if (result == null)
-				{
-					return NotFound("Room not found");
-				}
-
-				return Ok(result);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(ex.Message);
-			}
-		}
-
-        [HttpPost("CreateConversation")]
-        public async Task<IActionResult> CreateConversation(string roomId, string subject)
+        [HttpPost("CreateConversation/{roomId}")]
+        public async Task<IActionResult> CreateConversation(string roomId, [FromBody] CreateConversation conversation)
         {
             try
             {
@@ -183,16 +145,13 @@ namespace WebApi.Controllers
                 {
                     return BadRequest("RoomId is missing!");
                 }
-                else
-                {
-                    var room = await _roomService.GetRoom(roomId);
-                    var char1 = await _characterService.GetCharacter(room.CharId[0]);
-                    var char2 = await _characterService.GetCharacter(room.CharId[1]);
 
-                    var result = await _roomService.CreateConversation(char1, char2, subject);
+                var char1 = await _characterService.GetCharacter(conversation.CharIds![0]);
+                var char2 = await _characterService.GetCharacter(conversation.CharIds![1]);
 
-                    return Ok(result);
-                }
+                var result = await _roomService.CreateConversation(char1, char2, conversation.Subject!);
+
+                return Ok(result);
                 
             }
             catch (Exception ex)
