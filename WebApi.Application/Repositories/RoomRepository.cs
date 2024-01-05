@@ -10,12 +10,14 @@ namespace WebApi.Application.Repositories
     {
         private readonly IMongoCollection<Room> _room;
 		private readonly IMongoCollection<Character> _character;
+        private readonly IMongoCollection<Label> _label;
 
         public RoomRepository(IDatabaseSettings settings, IMongoClient mongoClient)
         {
             var database = mongoClient.GetDatabase(settings.DatabaseName);
             _room = database.GetCollection<Room>(settings.RoomCollectionName);
 			_character = database.GetCollection<Character>(settings.CollectionName);
+            _label = database.GetCollection<Label>(settings.LabelCollectionName);
         }
 
 		public async Task<Room> GetRoom(string id)
@@ -39,7 +41,10 @@ namespace WebApi.Application.Repositories
 
         public async Task<List<Room>> GetRoomsByUserId(int userId)
 		{
-            var filter = Builders<Room>.Filter.Eq("UserId", userId);
+            var filter = Builders<Room>.Filter.And(
+                Builders<Room>.Filter.Eq("UserId", userId),
+                Builders<Room>.Filter.Eq("IsDeleted", false)
+            );
             var sortDefinition = Builders<Room>.Sort.Descending("_id");
 			var latestRooms =  (await _room.Find(filter)
 				.Sort(sortDefinition)
@@ -58,14 +63,15 @@ namespace WebApi.Application.Repositories
 
 		public async Task<bool> DeleteRoom(string id)
 		{
-			var filter = Builders<Room>.Filter.Eq("Id", id);
+            var room = await _room.Find(Builders<Room>.Filter.Eq("Id", id)).FirstOrDefaultAsync();
+            if (room == null) return false;
 
+            var filter = Builders<Room>.Filter.Eq("RoomId", room.RoomId);
             var update = Builders<Room>.Update.Set("IsDeleted", true);
 
-			await _room.UpdateOneAsync(filter, update);
-
-			return true;
-		}
+            var result = await _room.UpdateManyAsync(filter, update);
+            return result.ModifiedCount > 0;
+        }
 
 		public async Task<IEnumerable<Character>> GetCharacters(string roomId)
 		{
@@ -124,5 +130,63 @@ namespace WebApi.Application.Repositories
 				throw new Exception($"CharId {charId} does not exist on room {roomId}.");
 			}
 		}
-	}
+
+        public async Task<IEnumerable<Label>> GetLabels(string roomId)
+        {
+            var roomFilter = Builders<Room>.Filter.Eq("Id", roomId);
+            var room = await _room.Find(roomFilter).FirstOrDefaultAsync();
+
+            if (room == null || room.LabelId?.Count == 0 || room.LabelId == null)
+            {
+                return new List<Label>();
+            }
+
+            var labelFilter = Builders<Label>.Filter.In("Id", room.LabelId);
+            return await _label.Find(labelFilter).ToListAsync();
+        }
+
+        public async Task<Room> AddLabel(string roomId, string labelId)
+        {
+            var filter = Builders<Room>.Filter.And(
+                Builders<Room>.Filter.Eq("Id", roomId),
+                Builders<Room>.Filter.Eq("IsDeleted", false)
+            );
+
+            var update = Builders<Room>.Update.Push("LabelId", labelId);
+
+            var options = new FindOneAndUpdateOptions<Room>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return await _room.FindOneAndUpdateAsync(filter, update, options);
+        }
+
+        public async Task<Room> RemoveLabel(string roomId, string labelId)
+        {
+            var filter = Builders<Room>.Filter.And(
+                Builders<Room>.Filter.Eq("Id", roomId),
+                Builders<Room>.Filter.Eq("IsDeleted", false),
+                Builders<Room>.Filter.AnyEq("LabelId", labelId)
+            );
+
+            var roomToUpdate = await _room.Find(filter).FirstOrDefaultAsync();
+
+            if (roomToUpdate != null)
+            {
+                var update = Builders<Room>.Update.Pull("LabelId", labelId);
+
+                var options = new FindOneAndUpdateOptions<Room>
+                {
+                    ReturnDocument = ReturnDocument.After
+                };
+
+                return await _room.FindOneAndUpdateAsync(filter, update, options);
+            }
+            else
+            {
+                throw new Exception($"LabelId {labelId} does not exist on room {roomId}.");
+            }
+        }
+    }
 }
