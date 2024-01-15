@@ -8,13 +8,11 @@ namespace WebApi.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly RoomCollectionService _roomCollectionService;
         private readonly RoomService _roomService;
         private readonly CharacterService _characterService;
 
-        public RoomController(RoomCollectionService roomCollectionService, RoomService roomService, CharacterService characterService)
+        public RoomController(RoomService roomService, CharacterService characterService)
         {
-            _roomCollectionService = roomCollectionService;
             _roomService = roomService;
             _characterService = characterService;
         }
@@ -68,7 +66,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _roomCollectionService.CreateRoom(room);
+                var result = await _roomService.CreateRoom(room);
 
                 return Ok(result);
             }
@@ -89,7 +87,7 @@ namespace WebApi.Controllers
                 }
                 else
                 {
-                    var result = await _roomCollectionService.CreateRoom(room);
+                    var result = await _roomService.CreateRoom(room);
 
                     return Ok(result);
                 }
@@ -105,7 +103,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _roomCollectionService.DeleteRoom(id);
+                var result = await _roomService.DeleteRoom(id);
 
                 if (result)
                 {

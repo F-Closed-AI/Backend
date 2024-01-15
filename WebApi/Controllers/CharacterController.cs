@@ -8,12 +8,10 @@ namespace WebApi.Controllers
 	[ApiController]
 	public class CharacterController : ControllerBase
 	{
-		private readonly CharacterCollectionService _characterCollectionService;
 		private readonly CharacterService _characterService;
 
-		public CharacterController(CharacterCollectionService characterCollectionService, CharacterService characterService)
+		public CharacterController(CharacterService characterService)
 		{
-			_characterCollectionService = characterCollectionService;
 			_characterService = characterService;
 		}
 
@@ -22,7 +20,7 @@ namespace WebApi.Controllers
 		{
 			try
 			{
-				var result = await _characterCollectionService.CreateCharacterAsync(input);
+				var result = await _characterService.CreateCharacterAsync(input);
 
 				return Ok(result);
 			}
@@ -73,7 +71,7 @@ namespace WebApi.Controllers
 		{
 			try
 			{
-				var result = await _characterCollectionService.GetCharactersByUserId(userId);
+				var result = await _characterService.GetCharactersByUserId(userId);
 
 				if (result.Any())
 				{
@@ -124,7 +122,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var result = await _characterCollectionService.DeleteCharacter(id);
+                var result = await _characterService.DeleteCharacter(id);
 
                 if (result)
                 {

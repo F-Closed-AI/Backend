@@ -13,6 +13,16 @@ namespace WebApi.Application.Services
 			_roomRepository = roomRepository;
 		}
 
+		public async Task<Room> CreateRoom(Room room)
+		{
+			return await _roomRepository.CreateRoom(room);
+		}
+
+		public async Task<bool> DeleteRoom(string id)
+		{
+			return await _roomRepository.DeleteRoom(id);
+		}
+
 		public async Task<Room> GetRoom(string id)
 		{
 			return await _roomRepository.GetRoom(id);
