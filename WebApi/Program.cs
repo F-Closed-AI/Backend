@@ -31,13 +31,14 @@ namespace WebApi
 			builder.Services.AddSingleton<IMongoClient>(s =>
 			new MongoClient(builder.Configuration.GetValue<string>("ConnectionStrings:MongoDBConnection")));
 
-			builder.Services.AddScoped<CharacterCollectionService, CharacterCollectionService>();
 			builder.Services.AddScoped<CharacterService, CharacterService>();
 			builder.Services.AddScoped<CharacterRepository, CharacterRepository>();
 
-            builder.Services.AddScoped<RoomCollectionService, RoomCollectionService>();
             builder.Services.AddScoped<RoomService, RoomService>();
             builder.Services.AddScoped<RoomRepository, RoomRepository>();
+
+			builder.Services.AddScoped<LabelService, LabelService>();
+			builder.Services.AddScoped<LabelRepository, LabelRepository>();	
 
             builder.Services.AddCors(options =>
 			{

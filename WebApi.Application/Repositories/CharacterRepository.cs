@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Diagnostics;
 using WebApi.Application.Interfaces;
 using WebApi.Application.Models;
 
@@ -26,9 +27,12 @@ namespace WebApi.Application.Repositories
 			return _character.Find(character => true).ToList();
 		}
 
-		public async Task<List<Character>> GetAllByUserId(int id)
+		public async Task<List<Character>> GetAllByUserId(int userId)
 		{
-            var filter = Builders<Character>.Filter.Eq("UserId", id);
+            var filter = Builders<Character>.Filter.And(
+                Builders<Character>.Filter.Eq("UserId", userId),
+                Builders<Character>.Filter.Eq("IsDeleted", false)
+            );
             var sortDefinition = Builders<Character>.Sort.Descending("_id");
 
             var latestCharacters = (await _character.Find(filter)
@@ -54,6 +58,18 @@ namespace WebApi.Application.Repositories
             return await _character.Find(filter)
                 .Sort(sort)
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteCharacter(string id)
+        {
+            var character = await _character.Find(Builders<Character>.Filter.Eq("Id", id)).FirstOrDefaultAsync();
+            if (character == null) return false;
+
+            var filter = Builders<Character>.Filter.Eq("CharId", character.CharId);
+            var update = Builders<Character>.Update.Set("IsDeleted", true);
+
+            var result = await _character.UpdateManyAsync(filter, update);
+            return result.ModifiedCount > 0;
         }
     }
 }
